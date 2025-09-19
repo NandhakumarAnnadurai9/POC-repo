@@ -29,6 +29,7 @@ const createMockUser = (id, summaryText, detailText) => ({
 
 // GET endpoint to generate a large list of data (~10MB)
 app.get('/', (req, res) => {
+   res.status(200).json('Welcome, your app is working well');
   console.log('Received request to generate 10MB of data...');
 
   const TARGET_SIZE_BYTES = 10 * 1024 * 1024; // 10 MB
