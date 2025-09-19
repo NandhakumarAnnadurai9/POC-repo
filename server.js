@@ -66,9 +66,9 @@ app.get('/', (req, res) => {
   res.json(users);
 });
 
-module.exports = app;
-
 app.listen(PORT, () => {
   console.log(`✅ Server is running on http://localhost:${PORT}`);
   console.log(`Use this URL for your mock API: http://localhost:${PORT}/api/data`);
 });
+
+module.exports = app;
