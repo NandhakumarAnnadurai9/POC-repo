@@ -71,7 +71,7 @@ app.get('/', (req, res) => {
 app.get('/get2mbUser', (req, res) => {
   console.log('Received request to generate 10MB of data...');
 
-  const TARGET_SIZE_BYTES = 2 * 1024 * 1024; // 2 MB
+  const TARGET_SIZE_BYTES = 1 * 1024 * 1024; // 1 MB
 
   // 1. Create a large block of "lumpsum text" to fill the data fields.
   // A single character is roughly 1 byte, so we create a ~9KB text block.
