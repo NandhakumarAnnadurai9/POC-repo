@@ -104,8 +104,7 @@ app.get('/get2mbUser', (req, res) => {
   // 4. Generate the final array of user data.
   const users = [];
   for (let i = 1; i <= numberOfUsers; i++) {
-    users.push(createMockUser(counter, summary, detail));
-    incrementCounter()
+    users.push(createMockUser(i, summary, detail));
   }
 
   const finalPayloadSizeBytes = Buffer.byteLength(JSON.stringify(users), 'utf8');
