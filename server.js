@@ -67,6 +67,16 @@ app.get('/', (req, res) => {
 });
 
 
+// Define a global variable
+global.counter = 1;
+
+// Function to increment the global variable
+function incrementCounter() {
+  global.counter += 1;
+  console.log("Counter:", global.counter);
+}
+
+
 // GET endpoint to generate a large list of data (~10MB)
 app.get('/get2mbUser', (req, res) => {
   console.log('Received request to generate 10MB of data...');
@@ -76,25 +86,26 @@ app.get('/get2mbUser', (req, res) => {
   // 1. Create a large block of "lumpsum text" to fill the data fields.
   // A single character is roughly 1 byte, so we create a ~9KB text block.
   const lorem = 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed non risus. Suspendisse lectus tortor, dignissim sit amet, adipiscing nec, ultricies sed, dolor. ';
-  const lumpsumText = lorem.repeat(Math.ceil(9000 / lorem.length)); // ~9KB
+  // const lumpsumText = lorem.repeat(Math.ceil(9000 / lorem.length)); // ~9KB
 
   // We can split the large text between the two fields.
-  const summary = lumpsumText.substring(0, lumpsumText.length / 2);
-  const detail = lumpsumText.substring(lumpsumText.length / 2);
+  // const summary = lumpsumText.substring(0, lumpsumText.length / 2);
+  // const detail = lumpsumText.substring(lumpsumText.length / 2);
 
   // 2. Estimate the byte size of a single JSON object to calculate how many are needed.
-  const singleUser = createMockUser(1, summary, detail);
+  const singleUser = createMockUser(1, lorem, lorem);
   // Using Buffer.byteLength is more accurate for size calculation than string.length.
   const singleUserByteSize = Buffer.byteLength(JSON.stringify(singleUser), 'utf8');
 
   // 3. Calculate how many objects are required to reach the target size.
   // We add 1 byte to the size to account for the comma separating objects in a JSON array.
-  const numberOfUsers = Math.floor(TARGET_SIZE_BYTES / (singleUserByteSize + 1));
+  const numberOfUsers = 30;
 
   // 4. Generate the final array of user data.
   const users = [];
   for (let i = 1; i <= numberOfUsers; i++) {
-    users.push(createMockUser(i, summary, detail));
+    users.push(createMockUser(counter, summary, detail));
+    incrementCounter()
   }
 
   const finalPayloadSizeBytes = Buffer.byteLength(JSON.stringify(users), 'utf8');
