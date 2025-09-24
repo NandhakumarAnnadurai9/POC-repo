@@ -30,6 +30,10 @@ const createMockUser = (id, summaryText, detailText) => ({
   Detail: detailText,
 });
 
+app.get('/', (req, res) => {
+  res.status(200).json('Welcome, your app is working well');
+})
+
 // GET endpoint to generate a large list of data (~10MB)
 app.get('/userlist', (req, res) => {
   console.log('Received request to generate 10MB of data...');
