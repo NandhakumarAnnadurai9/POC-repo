@@ -103,42 +103,72 @@ app.get('/get2mbUser', (req, res) => {
     //  res.status(200).json('Welcome, your app is working well');
 });
 
-// Generate random product values
+function getLorem(sizeInKb = 1) {
+  const lorem = 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed non risus. Suspendisse lectus tortor, dignissim sit amet, adipiscing nec, ultricies sed, dolor. ';
+  const lumpsumText = lorem.repeat(Math.ceil(sizeInKb * 1024 / lorem.length))
+  return lumpsumText.substring(0, sizeInKb * 1024);
+}
+
+// helper: random boolean with probability
+function randomBool(probability = 0.5) {
+  return Math.random() < probability;
+}
+
+// helper: random date (past year)
+function randomDatePast(years = 1) {
+  const now = new Date();
+  const past = new Date();
+  past.setFullYear(now.getFullYear() - years);
+  const timestamp = Math.floor(
+    past.getTime() + Math.random() * (now.getTime() - past.getTime())
+  );
+  return new Date(timestamp).toISOString();
+}
+
+// helper: random integer in range
+function randomInt(min = 1, max = 10) {
+  return Math.floor(Math.random() * (max - min + 1)) + min;
+}
+
 function generateProduct() {
   return {
-    productId: uuidv4(),
-    name: uuidv4.name,
-    description: Math.random() > 0.2 ? getLorem(5) : null, // sometimes null
-    category: uuidv4.name,
-    brand: uuidv4.name,
+    productId: crypto.randomUUID(),
+    name: "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
+    description: randomBool(0.8) ? getLorem(5) : null, // 80% chance
+    category: "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
+    brand: "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
     price: {
       currency: "USD",
-      amount: parseFloat(50),
-      discount: Math.random() > 0.5 ? {
-        percentage: Math.random(),
-        finalPrice: parseFloat(50)
-      } : null
+      amount: 50,
+      discount: randomBool(0.5)
+        ? {
+            percentage: Math.random(),
+            finalPrice: 50, // adjust with percentage if you want
+          }
+        : null,
     },
     availability: {
-      inStock: Math.random() > 0.2 ? true: false,
-      quantity: Math.random(),
-      estimatedDelivery: Math.random() > 0.3 ? causal.date.toISOString() : null
+      inStock: randomBool(0.8),
+      quantity: randomInt(0, 100),
+      estimatedDelivery: randomBool(0.7) ? randomDatePast(1) : null,
     },
-    images: Array.from({ length: Math.random.int({ min: 0, max: 3 }) }, () => ({
-      url: Math.random() > 0.2 ? "https://dummy.com": null,
-      alt: getLorem(1)
+    images: Array.from({ length: randomInt(1, 3) }, () => ({
+      url: randomBool(0.8) ? "https://dummy.com" : null,
+      alt: getLorem(1),
     })),
-    specifications: Math.random() > 0.3 ? {
-      color: "black",
-      weight: "100g",
-      details: getLorem(5)
-    } : null,
+    specifications: randomBool(0.7)
+      ? {
+          color: "black",
+          weight: "100g",
+          details: getLorem(5),
+        }
+      : null,
     ratings: {
-      average: Math.random() > 0.5 ? 4.3 : null,
-      totalReviews: Math.random()
+      average: randomBool(0.5) ? 4.3 : null,
+      totalReviews: randomInt(0, 500),
     },
-    createdAt: "2024-11-19T08:43:12.000Z",
-    updatedAt: "2024-11-19T08:43:12.000Z"
+    createdAt: randomDatePast(2),
+    updatedAt: randomDatePast(1),
   };
 }
 
@@ -146,11 +176,12 @@ app.get("/getProductList", (req, res) => {
   try {
       console.log(`Called getProductList`);
       const targetSizeMB = parseInt(req.query.size) || 5; // default 5 MB
+      console.log("targetSizeMB", targetSizeMB);
       const targetSizeBytes = targetSizeMB * 1024 * 1024;
+      console.log("targetSizeBytes", targetSizeBytes)
 
       let products = [];
       let currentSize = 0;
-
       while (currentSize < targetSizeBytes) {
         const product = generateProduct();
         products.push(product);
@@ -159,6 +190,7 @@ app.get("/getProductList", (req, res) => {
         currentSize = Buffer.byteLength(JSON.stringify(products));
       }
 
+      console.log(`Completed`);
       res.json({
         status: "success",
         approxPayloadSizeMB: (currentSize / (1024 * 1024)).toFixed(2),
@@ -169,12 +201,6 @@ app.get("/getProductList", (req, res) => {
     res.json({error: "internal error"})
   }
 });
-
-function getLorem(sizeInKb = 3) {
-  const lorem = 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed non risus. Suspendisse lectus tortor, dignissim sit amet, adipiscing nec, ultricies sed, dolor. ';
-  const lumpsumText = lorem.repeat(Math.ceil(sizeInKb * 1024 / lorem.length))
-  return lumpsumText.substring(0, sizeInKb * 1024);
-}
 
 app.listen(PORT, () => {
   console.log(`✅ Server is running on http://localhost:${PORT}`);
