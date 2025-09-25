@@ -1,8 +1,8 @@
 
 // server.js
+import causal from 'causal';
 
 const express = require('express');
-const { faker } = require("@faker-js/faker");
 const { v4: uuidv4 } = require("uuid");
 
 const app = express();
@@ -109,38 +109,38 @@ app.get('/get2mbUser', (req, res) => {
 function generateProduct() {
   return {
     productId: uuidv4(),
-    name: faker.commerce.productName(),
+    name: causal.name,
     description: Math.random() > 0.2 ? getLorem(5) : null, // sometimes null
-    category: faker.commerce.department(),
-    brand: faker.company.name(),
+    category: causal.category,
+    brand: causal.brand,
     price: {
       currency: "USD",
-      amount: parseFloat(faker.commerce.price()),
+      amount: parseFloat(causal.price),
       discount: Math.random() > 0.5 ? {
-        percentage: faker.number.int({ min: 5, max: 50 }),
-        finalPrice: parseFloat(faker.commerce.price())
+        percentage: causal.number.int({ min: 5, max: 50 }),
+        finalPrice: parseFloat(causal.commerce.price())
       } : null
     },
     availability: {
-      inStock: faker.datatype.boolean(),
-      quantity: faker.number.int({ min: 0, max: 500 }),
-      estimatedDelivery: Math.random() > 0.3 ? faker.date.soon().toISOString().split("T")[0] : null
+      inStock: Math.random() > 0.2 ? true: false,
+      quantity: causal.number.int({ min: 0, max: 500 }),
+      estimatedDelivery: Math.random() > 0.3 ? causal.date.toISOString() : null
     },
-    images: Array.from({ length: faker.number.int({ min: 0, max: 3 }) }, () => ({
-      url: faker.image.url(),
-      alt: faker.commerce.productAdjective()
+    images: Array.from({ length: causal.number.int({ min: 0, max: 3 }) }, () => ({
+      url: causal.images.url(),
+      alt: causal.commerce.productId()
     })),
     specifications: Math.random() > 0.3 ? {
-      color: faker.color.human(),
-      weight: faker.number.int({ min: 100, max: 2000 }) + "g",
+      color: causal.color.human(),
+      weight: causal.number.int({ min: 100, max: 2000 }) + "g",
       details: getLorem(5)
     } : null,
     ratings: {
-      average: Math.random() > 0.5 ? faker.number.float({ min: 1, max: 5, precision: 0.1 }) : null,
-      totalReviews: faker.number.int({ min: 0, max: 5000 })
+      average: Math.random() > 0.5 ? causal.number.float({ min: 1, max: 5, precision: 0.1 }) : null,
+      totalReviews: causal.number.int({ min: 0, max: 5000 })
     },
-    createdAt: faker.date.past().toISOString(),
-    updatedAt: faker.date.recent().toISOString()
+    createdAt: causal.date.past().toISOString(),
+    updatedAt: causal.date.recent().toISOString()
   };
 }
 

@@ -10,7 +10,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "@faker-js/faker": "^10.0.0",
+    "causal": "^0.0.3",
     "express": "^5.1.0"
   }
 }
