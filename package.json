@@ -10,7 +10,6 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "causal": "^0.0.3",
     "express": "^5.1.0"
   }
 }

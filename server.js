@@ -1,7 +1,5 @@
 
 // server.js
-import causal from 'causal';
-
 const express = require('express');
 const { v4: uuidv4 } = require("uuid");
 
@@ -109,38 +107,38 @@ app.get('/get2mbUser', (req, res) => {
 function generateProduct() {
   return {
     productId: uuidv4(),
-    name: causal.name,
+    name: uuidv4.name,
     description: Math.random() > 0.2 ? getLorem(5) : null, // sometimes null
-    category: causal.category,
-    brand: causal.brand,
+    category: uuidv4.name,
+    brand: uuidv4.name,
     price: {
       currency: "USD",
-      amount: parseFloat(causal.price),
+      amount: parseFloat(50),
       discount: Math.random() > 0.5 ? {
-        percentage: causal.number.int({ min: 5, max: 50 }),
-        finalPrice: parseFloat(causal.commerce.price())
+        percentage: Math.random(),
+        finalPrice: parseFloat(50)
       } : null
     },
     availability: {
       inStock: Math.random() > 0.2 ? true: false,
-      quantity: causal.number.int({ min: 0, max: 500 }),
+      quantity: Math.random(),
       estimatedDelivery: Math.random() > 0.3 ? causal.date.toISOString() : null
     },
-    images: Array.from({ length: causal.number.int({ min: 0, max: 3 }) }, () => ({
-      url: causal.images.url(),
-      alt: causal.commerce.productId()
+    images: Array.from({ length: Math.random.int({ min: 0, max: 3 }) }, () => ({
+      url: Math.random() > 0.2 ? "https://dummy.com": null,
+      alt: getLorem(1)
     })),
     specifications: Math.random() > 0.3 ? {
-      color: causal.color.human(),
-      weight: causal.number.int({ min: 100, max: 2000 }) + "g",
+      color: "black",
+      weight: "100g",
       details: getLorem(5)
     } : null,
     ratings: {
-      average: Math.random() > 0.5 ? causal.number.float({ min: 1, max: 5, precision: 0.1 }) : null,
-      totalReviews: causal.number.int({ min: 0, max: 5000 })
+      average: Math.random() > 0.5 ? 4.3 : null,
+      totalReviews: Math.random()
     },
-    createdAt: causal.date.past().toISOString(),
-    updatedAt: causal.date.recent().toISOString()
+    createdAt: "2024-11-19T08:43:12.000Z",
+    updatedAt: "2024-11-19T08:43:12.000Z"
   };
 }
 
