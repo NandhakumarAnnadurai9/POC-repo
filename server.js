@@ -174,19 +174,37 @@ function generateProduct() {
 app.get("/getProductList", (req, res) => {
   try {
       console.log(`Called getProductList`);
-      const targetSizeMB = parseInt(req.query.size) || 5; // default 5 MB
+      const targetSizeMB = parseInt(req.query.size) || 0; // default 5 MB
       console.log("targetSizeMB", targetSizeMB);
+      if (targetSizeMB > 100) {
+        targetSizeMB = 30
+        console.log("targetSizeMB changed to default size", targetSizeMB);
+      }
+      const limit = parseInt(req.query.limit) || 30;
+      console.log("Limit", limit);
+
       const targetSizeBytes = targetSizeMB * 1024 * 1024;
       console.log("targetSizeBytes", targetSizeBytes)
 
       let products = [];
       let currentSize = 0;
-      while (currentSize < targetSizeBytes) {
-        const product = generateProduct();
-        products.push(product);
+      let initial = 0;
+      if (targetSizeMB > 0) {
+        while (currentSize < targetSizeBytes) {
+          const product = generateProduct();
+          products.push(product);
 
-        // Calculate current payload size
-        currentSize = Buffer.byteLength(JSON.stringify(products));
+          // Calculate current payload size
+          currentSize = Buffer.byteLength(JSON.stringify(products));
+        }
+      } else {
+        while (initial < limit) {
+          const product = generateProduct();
+          products.push(product);
+          // Calculate current payload size
+          currentSize = Buffer.byteLength(JSON.stringify(products));
+          initial = initial + 1;
+        }
       }
 
       console.log(`Completed`);
