@@ -174,7 +174,7 @@ function generateProduct() {
 app.get("/getProductList", (req, res) => {
   try {
       console.log(`Called getProductList`);
-      const targetSizeMB = parseInt(req.query.size) || 0; // default 5 MB
+      const targetSizeMB = parseInt(req.query.size) || 0;
       console.log("targetSizeMB", targetSizeMB);
       if (targetSizeMB > 100) {
         targetSizeMB = 30
@@ -182,7 +182,10 @@ app.get("/getProductList", (req, res) => {
       }
       const limit = parseInt(req.query.limit) || 30;
       console.log("Limit", limit);
-
+      if (limit > 300) {
+        limit = 300
+        console.log("limit changed to default size", limit);
+      }
       const targetSizeBytes = targetSizeMB * 1024 * 1024;
       console.log("targetSizeBytes", targetSizeBytes)
 
