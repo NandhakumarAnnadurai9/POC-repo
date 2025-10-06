@@ -182,8 +182,8 @@ app.get("/getProductList", (req, res) => {
       }
       const limit = parseInt(req.query.limit) || 30;
       console.log("Limit", limit);
-      if (limit > 300) {
-        limit = 300
+      if (limit > 10000) {
+        limit = 10000
         console.log("limit changed to default size", limit);
       }
       const targetSizeBytes = targetSizeMB * 1024 * 1024;
