@@ -33,9 +33,12 @@ app.get('/', (req, res) => {
 
 // GET endpoint to generate a large list of data (~10MB)
 app.get('/userlist', (req, res) => {
+
+  const targetSizeMB = parseInt(req.query.size) || 10;
+
   console.log('Received request to generate 10MB of data...');
 
-  const TARGET_SIZE_BYTES = 10 * 1024 * 1024; // 10 MB
+  const TARGET_SIZE_BYTES = targetSizeMB * 1024 * 1024;
 
   const lorem = 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed non risus. Suspendisse lectus tortor, dignissim sit amet, adipiscing nec, ultricies sed, dolor. ';
   const lumpsumText = lorem.repeat(Math.ceil(9000 / lorem.length)); // ~9KB
